@@ -1,4 +1,4 @@
-name: Snyk SCA Scan
+name: Snyk SCA Scan via ADI
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        run: mvn -B package --file mvnwebapp-1-master/pom.xml
       - name: run MVN install
         run: mvn install # install maven
 
@@ -28,14 +28,14 @@ jobs:
       - run: npm install snyk -g # install snyk
       - run: snyk -v
       - run: snyk auth ${{ secrets.SNYK_TOKEN }} # snyk authentication using GH secrets
-      - run: snyk monitor
+      - run: snyk monitor --file=mvnwebapp-1-master/pom.xml
 
         # Generate the HTML report
       - name: Run snyk test and install snyk-to-html
         run: | 
          npm install snyk-to-html -g
                # Convert JSON output from `snyk test --json` into a static HTML
-         snyk test --json | snyk-to-html -o Results.html
+         snyk test --json | snyk-to-html -o results.html --file=mvnwebapp-1-master/pom.xml
          mkdir downloads
          pwd
          cp -v /home/runner/*/*/*/*.html /home/runner/work/*/*/downloads

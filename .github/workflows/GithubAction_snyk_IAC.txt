@@ -1,0 +1,36 @@
+name: Snyk Infrastructure as Code Security Scan
+
+on:
+  push:
+    branches: $branchName$
+  pull_request:
+    branches: $branchName$
+
+jobs:
+  snyk-iac-security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Snyk to check Infrastructure as Code files for issues
+        continue-on-error: true
+        uses: snyk/actions/iac@master
+        env:
+          SNYK_TOKEN: ${{ secrets.$snykTokenName$ }}
+        with:
+          file: $toBeScanned$
+      - uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: $reportName$.sarif
+          path: /home/runner/*/*/*/$reportName$.sarif
+       
+      - name: Use the Upload Artifact GitHub Action
+        uses: actions/upload-artifact@v2
+        with:
+          name: $reportName$.sarif
+          path: /home/runner/*/*/*/$reportName$.sarif
+---------------------------------------------------------
+
+$branchName$: master
+$snykTokenName$:  SNYK_TOKEN #Name of snyk token  secret stored
+$reportName$ : snyk
+$toBeScanned$ : terraform/

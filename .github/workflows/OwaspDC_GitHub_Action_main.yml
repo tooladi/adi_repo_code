@@ -13,6 +13,7 @@ jobs:
          cd mvnwebapp-1-master
          mvn clean package
       - name: Depcheck
+        continue-on-error: true
         uses: dependency-check/Dependency-Check_Action@main
         id: Depcheck
         with:
@@ -20,7 +21,7 @@ jobs:
           path: '.'
           format: 'ALL'    #Format Example: HTML, ALL, CSV, etc
           args: >
-            --failOnCVSS 7
+            --failOnCVSS 9
             --enableRetired
       - name: Upload Test results
         uses: actions/upload-artifact@master

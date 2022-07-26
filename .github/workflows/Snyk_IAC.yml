@@ -18,6 +18,7 @@ jobs:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           file: terragoat-master/terraform/
+          
      # - uses: github/codeql-action/upload-sarif@v2
     #    with:
      #     sarif_file: snyk_iac.sarif
@@ -27,4 +28,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: snyk_iac.sarif
-          path: /home/runner/*/*/*/snyk_iac.sarif
+          path: /home/runner/*/*/*/snyk.sarif

@@ -20,7 +20,9 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file mvnwebapp-1-master/pom.xml
       - name: run MVN install
-        run: mvn install # install maven
+        run: | 
+            cd mvnwebapp-1-master
+            mvn install # install maven
 
       - uses: actions/setup-node@v2
         with:

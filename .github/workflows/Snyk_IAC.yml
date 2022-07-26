@@ -20,7 +20,7 @@ jobs:
           file:terragoat-master/terraform/
       - uses: github/codeql-action/upload-sarif@v1
         with:
-          sarif_file: $reportName$.sarif
+          sarif_file: snyk_iac.sarif
           path: /home/runner/*/*/*/snyk_iac.sarif
        
       - name: Use the Upload Artifact GitHub Action

@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - continue-on-error: true
       with:
         fetch-depth: 0 #to fetch all history of all branches 
     - name: trufflehog-actions-scan

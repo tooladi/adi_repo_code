@@ -2,9 +2,9 @@ name: Trufflehog
 
 on:
   push:
-    branches: [ $branchName$ ]
+    branches: [ main ]
   pull_request:
-    branches: [ $branchName$ ]
+    branches: [main]
 
 jobs:
   build:
@@ -18,7 +18,4 @@ jobs:
       with:
         scanArguments: "--regex --entropy=False  --rules /regexes.json" 
 		
--------------------------------------
-
-$branchName$: master
 

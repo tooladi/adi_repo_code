@@ -14,7 +14,7 @@ jobs:
         uses: dependency-check/Dependency-Check_Action@main
         id: Depcheck
         with:
-          project: 'adi_repo_code/mvnwebapp-1-master'  #Project Name
+          project: 'mvnwebapp-1-master'  #Project Name
           path: '.'
           format: 'ALL'    #Format Example: HTML, ALL, CSV, etc
           args: >

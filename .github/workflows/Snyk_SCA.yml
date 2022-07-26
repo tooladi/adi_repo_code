@@ -44,9 +44,8 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: results
-          path: downloads
-		  
-#---------------------------------------------------
-#$branchName$: master
-#$snykToken$: snyk_token
-#$reportName$ : result
+          path: downloads		  
+		###---------------------------------------------------
+		#$branchName$: master
+		#$snykToken$: snyk_token
+		#$reportName$ : result

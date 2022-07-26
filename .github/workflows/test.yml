@@ -1,5 +1,8 @@
 on : workflow_dispatch
 
 jobs:
-  steps:
-    echo "hello "
+  build:
+    runs-on: ubuntu-latest
+    steps:
+     - run : echo "hello"
+ 

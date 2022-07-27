@@ -1,0 +1,19 @@
+image: maven:3-jdk-11
+snyk_iac:
+  stage: build
+  script:
+  - mvn install
+  - curl -sL https://deb.nodesource.com/setup_10.x | bash -
+  - apt-get -y upgrade
+  - apt-get -y install nodejs
+  - apt-get -y install npm
+  - npm install -g snyk
+  - npm install snyk-to-html -g
+  - snyk --help
+  - snyk auth $SNYK_TOKEN
+  - snyk iac test demo.tf --json | snyk-to-html -o snyk_results.html
+  
+  artifacts:
+    when: always
+    paths:
+    - snyk_results.html

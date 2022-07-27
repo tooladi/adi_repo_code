@@ -1,0 +1,15 @@
+stages:
+    - test
+
+checkov:
+  stage: test
+  allow_failure: true  # True for AutoDevOps compatibility
+  image:
+    name: python:3.8
+  before_script:
+    - pip install checkov
+  script:
+    # Use `script` to emulate `tty` for colored output.
+    - script -q -c 'checkov -d . ; echo $? > CKVEXIT'
+    - exit $(cat CKVEXIT)
+

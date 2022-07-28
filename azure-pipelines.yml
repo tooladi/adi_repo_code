@@ -1,19 +1,32 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
-- main
+  - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-18.04'
+
+#parameters:
+#- name: Firstname
+#  type: string
+#  values:
+#    - Sneha
+
+#resources:
+#  containers:
+#  - container: builder
+#    image: mysecurebuildcontainer:latest 
 
 steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+  - script: |
+      mvn install
+    displayName: 'mvn install'
+  - script: |
+      sudo npm install -g snyk 
+      # create variable in Pipelines called 'SNYK_TOKEN' and securely save your Snyk token value
+      # https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables
+      sudo snyk auth $(SNYK_TOKEN) 
+      #target : builder
+      
+    displayName: 'install snyk'
+  - script: |
+      sudo snyk test --json | snyk-to-html -o snyk_results.html
+    displayName: 'sudo snyk test'

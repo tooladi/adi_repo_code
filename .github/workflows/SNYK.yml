@@ -21,7 +21,7 @@ jobs:
         run: mvn -B package --file pom.xml
       - name: run MVN install
         run: | 
-            cd adi_repo_code
+            #cd adi_repo_code
             mvn install # install maven
 
       - uses: actions/setup-node@v2

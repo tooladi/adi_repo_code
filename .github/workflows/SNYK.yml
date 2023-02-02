@@ -18,10 +18,10 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
       - name: Build with Maven
-        run: mvn -B package --file mvnwebapp-1-master/pom.xml
+        run: mvn -B package --file pom.xml
       - name: run MVN install
         run: | 
-            cd mvnwebapp-1-master
+            cd adi_repo_code
             mvn install # install maven
 
       - uses: actions/setup-node@v2
@@ -30,14 +30,14 @@ jobs:
       - run: npm install snyk -g # install snyk
       - run: snyk -v
       - run: snyk auth ${{ secrets.SNYK_TOKEN }} # snyk authentication using GH secrets
-      - run: snyk monitor --file=mvnwebapp-1-master/pom.xml
+      - run: snyk monitor --file=pom.xml
 
         # Generate the HTML report
       - name: Run snyk test and install snyk-to-html
         run: | 
          npm install snyk-to-html -g
                # Convert JSON output from `snyk test --json` into a static HTML
-         snyk test --file=mvnwebapp-1-master/pom.xml --json | snyk-to-html -o results.html 
+         snyk test --file=pom.xml --json | snyk-to-html -o results.html 
          mkdir downloads
          pwd
          cp -v /home/runner/*/*/*/*.html /home/runner/work/*/*/downloads

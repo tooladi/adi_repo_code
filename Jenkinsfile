@@ -1,42 +1,23 @@
-//Pre-Requisite: Maven tool to be installed!!
-node{
-
-        stage ('OWASP Dependency-Check Vulnerabilities') {
-           
-                deleteDir()
-              //  owasp_dc()
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'Github', url: 'https://github.com/sneha0302/java-reachability-playground.git']]])
-                bat 'mvn compile'
-               
-                dependencyCheck additionalArguments: ''' 
-                   -o "./" 
-                    -s "./"
-                   -f "ALL" 
-                    --prettyPrint''', odcInstallation: 'OWASP-DC'
-
-                dependencyCheckPublisher pattern: 'dependency-check-report.xml'
-               
-        
-        
-    }
-}
-
-def owasp_dc(){
-    
-     ws("C:\\Users\\sneha.sathyan\\Downloads\\owasp_dc"){
-                   
-                    bat "mkdir project"
-                    dir("project"){
-                        checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'Github', url: 'https://github.com/sneha0302/java-reachability-playground.git']]])
-                        bat 'mvn compile'
-                    }
-                    bat "git clone https://github.com/jeremylong/DependencyCheck.git"
-                    dir("DependencyCheck"){
-                        bat "mvn -s settings.xml install"
-                        bat "C:\\Users\\sneha.sathyan\\Downloads\\owasp_dc\\DependencyCheck\\cli\\target\\release\\bin\\dependency-check.bat -h"
-                        bat "C:\\Users\\sneha.sathyan\\Downloads\\owasp_dc\\DependencyCheck\\cli\\target\\release\\bin\\dependency-check.bat --out 'report.xml' --scan C:\\Users\\sneha.sathyan\\Downloads\\owasp_dc\\project"
-                  }
-                  //  bat '${WORKSPACE}+\\DependencyCheck\\bin\\dependency-check.bat --project "mvnwebapp-1" --scan "//*.war" --out "report.html"'
+pipeline{
+    agent any
+    stages{
+	stage('SCA-->Snyk') {
+            agent any
+            steps{
+				checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/tooladi/adi_repo_code.git']]])
+				snykSecurity failOnIssues: false, organisation: '8e4b6a20-7d7e-42b6-a1f9-69503cacee7d', snykInstallation: 'snykKey', snykTokenId: 'snykSecrectS'
                 }
-    
+        }
+stage('snyk-jira') {
+		steps {
+			script{
+				catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') 
+				{
+					bat 'C:\\Users\\Administrator\\Downloads\\snyk-jira-sync-win.exe --orgID=8e4b6a20-7d7e-42b6-a1f9-69503cacee7d --token=5eaeb723-1ce3-420b-9045-5d93d21a7206 --jiraProjectKey=AD --configFile=true --jiraTicketType=Task --projectID=e83fb563-2c5c-4167-9af7-2fab7c94967e'
+					bat 'exit 0'
+				}
+			}
+		}
+	}
+	}
 }

@@ -1,4 +1,4 @@
-name: Anchore Scan
+name: Anchore Scan for Container Sec via ADI
 on: 
   push:
     branches: main
@@ -8,12 +8,12 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Docker Build
-      run: docker build . --file Dockerfile --tag testrepo/testimage:latest
+      run: docker build . --file Dockerfile --tag nginx
     - uses: anchore/scan-action@v1
       with:
-        image-reference: "testrepo/testimage:latest"
+        image-reference: "nginx"
         dockerfile-path: "./Dockerfile"
-        fail-build: false
+        fail-build: true
     - name: Upload artifact
       uses: actions/upload-artifact@v1.0.0
       with:

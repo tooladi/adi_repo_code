@@ -12,10 +12,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        fetch-depth: 0 #to fetch all history of all branches  
+        fetch-depth: 0 #to fetch all history of all branches 
     - name: trufflehog-actions-scan
-      continue-on-error: true
       uses: edplato/trufflehog-actions-scan@master
       with:
-        scanArguments: "--regex --entropy=False  --rules /regexes.json"
-        
+        scanArguments: "--regex --entropy=False  --rules /regexes.json" 

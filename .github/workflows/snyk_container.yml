@@ -11,16 +11,38 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Run Snyk to check Infrastructure as Code files for issues
-        continue-on-error: true
-        uses: snyk/actions/iac@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
         with:
-          file: terragoat-master/terraform/
-     
+          java-version: '11'
+          distribution: 'adopt'
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml
+      - name: run MVN install
+        run: |
+          #cd mvnwebapp-1 
+          mvn install # install maven
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - run: npm install snyk -g # install snyk
+      - run: snyk -v
+      - run: snyk auth ${{ secrets.snyk_token }} # snyk authentication using GH secrets
+
+        # Generate the HTML report
+      - name: Run snyk test and install snyk-to-html
+        run: | 
+         npm install snyk-to-html -g
+               #Convert JSON output from `snyk test --json` into a static HTML
+           
+         snyk container test $imageName$ --json | snyk-to-html -o $reportName$.html
+         mkdir downloads
+         pwd
+         cp -v /home/runner/*/*/*/*.html /home/runner/work/*/*/downloads
+      # save the HTML in the artifact
       - name: Use the Upload Artifact GitHub Action
         uses: actions/upload-artifact@v2
         with:
-          name: snyk_iac.sarif
-          path: /home/runner/*/*/*/snyk.sarif
+          name: results
+          #path: /home/runner/*/*/*/*.json
+          path: downloads

@@ -1,0 +1,26 @@
+name: Snyk Container Security Scan
+
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: main
+
+jobs:
+  snyk-iac-security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Snyk to check Infrastructure as Code files for issues
+        continue-on-error: true
+        uses: snyk/actions/iac@master
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          file: terragoat-master/terraform/
+     
+      - name: Use the Upload Artifact GitHub Action
+        uses: actions/upload-artifact@v2
+        with:
+          name: snyk_iac.sarif
+          path: /home/runner/*/*/*/snyk.sarif

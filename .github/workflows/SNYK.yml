@@ -30,7 +30,7 @@ jobs:
       - run: npm install snyk -g # install snyk
       - run: snyk -v
       - run: snyk auth ${{ secrets.SNYK_TOKEN }} # snyk authentication using GH secrets
-      - run: snyk monitor --file=pom.xml
+      # - run: snyk monitor --file=pom.xml
 
         # Generate the HTML report
       - name: Run snyk test and install snyk-to-html
